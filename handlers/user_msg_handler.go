@@ -9,11 +9,11 @@ import (
 	"time"
 
 	"github.com/eatmoreapple/openwechat"
-	"github.com/qingconglaixueit/wechatbot/config"
-	"github.com/qingconglaixueit/wechatbot/dreamstudio"
-	"github.com/qingconglaixueit/wechatbot/gpt"
-	"github.com/qingconglaixueit/wechatbot/pkg/logger"
-	"github.com/qingconglaixueit/wechatbot/service"
+	"github.com/oubeichen/wechatbot/config"
+	"github.com/oubeichen/wechatbot/dreamstudio"
+	"github.com/oubeichen/wechatbot/gpt"
+	"github.com/oubeichen/wechatbot/pkg/logger"
+	"github.com/oubeichen/wechatbot/service"
 )
 
 var _ MessageHandlerInterface = (*UserMessageHandler)(nil)

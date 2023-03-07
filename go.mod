@@ -1,4 +1,4 @@
-module github.com/qingconglaixueit/wechatbot
+module github.com/oubeichen/wechatbot
 
 go 1.16
 

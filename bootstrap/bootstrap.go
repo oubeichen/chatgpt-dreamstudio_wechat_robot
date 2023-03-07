@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/eatmoreapple/openwechat"
-	"github.com/qingconglaixueit/wechatbot/handlers"
-	"github.com/qingconglaixueit/wechatbot/pkg/logger"
+	"github.com/oubeichen/wechatbot/handlers"
+	"github.com/oubeichen/wechatbot/pkg/logger"
 )
 
 func Run() {

@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/qingconglaixueit/wechatbot/config"
+	"github.com/oubeichen/wechatbot/config"
 )
 
 type TextToImageImage struct {

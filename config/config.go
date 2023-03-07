@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/qingconglaixueit/wechatbot/pkg/logger"
+	"github.com/oubeichen/wechatbot/pkg/logger"
 )
 
 // Configuration 项目配置
@@ -29,6 +29,10 @@ type Configuration struct {
 	ReplyPrefix string `json:"reply_prefix"`
 	// 清空会话口令
 	SessionClearToken string `json:"session_clear_token"`
+	//代理地址
+	Proxy string `json:"proxy"`
+	// 系统角色
+	SystemRole string `json:"system_role"`
 
 	// dreamstdio apikey
 	DreamStdioApiKey string `json:"dreamstdio_api_key"`
@@ -56,10 +60,11 @@ func LoadConfig() *Configuration {
 		config = &Configuration{
 			AutoPass:          false,
 			SessionTimeout:    60,
-			MaxTokens:         512,
-			Model:             "text-davinci-003",
+			MaxTokens:         1024,
+			Model:             "gpt-3.5-turbo",
 			Temperature:       0.9,
 			SessionClearToken: "下个问题",
+			SystemRole:        "You are a helpful assistant.",
 			EngineId:          "stable-diffusion-v1-5",
 			PicWidth:          512,
 			PicHeight:         512,
@@ -93,6 +98,8 @@ func LoadConfig() *Configuration {
 		Temperature := os.Getenv("TEMPREATURE")
 		ReplyPrefix := os.Getenv("REPLY_PREFIX")
 		SessionClearToken := os.Getenv("SESSION_CLEAR_TOKEN")
+		Proxy := os.Getenv("PROXY")
+		SystemRole := os.Getenv("SYSTEM_ROLE")
 
 		DreamStdioApiKey := os.Getenv("DREAMSTDIO_APIKEY")
 		EngineId := os.Getenv("ENGINE_ID")
@@ -139,6 +146,12 @@ func LoadConfig() *Configuration {
 		}
 		if SessionClearToken != "" {
 			config.SessionClearToken = SessionClearToken
+		}
+		if Proxy != "" {
+			config.Proxy = Proxy
+		}
+		if SystemRole != "" {
+			config.SystemRole = SystemRole
 		}
 		if DreamStdioApiKey != "" {
 			config.DreamStdioApiKey = DreamStdioApiKey

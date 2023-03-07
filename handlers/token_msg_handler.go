@@ -3,8 +3,8 @@ package handlers
 import (
 	"fmt"
 	"github.com/eatmoreapple/openwechat"
-	"github.com/qingconglaixueit/wechatbot/pkg/logger"
-	"github.com/qingconglaixueit/wechatbot/service"
+	"github.com/oubeichen/wechatbot/pkg/logger"
+	"github.com/oubeichen/wechatbot/service"
 	"math/rand"
 	"time"
 )
