@@ -2,7 +2,7 @@
 <h1>ChatGPT-DreamStudio WeChat Robot</h1>
 <p>  🎨基于GO语言实现的微信聊天和图片生成机器人🎨 </p>
 <img src="https://camo.githubusercontent.com/82291b0fe831bfc6781e07fc5090cbd0a8b912bb8b8d4fec0696c881834f81ac/68747470733a2f2f70726f626f742e6d656469612f394575424971676170492e676966" width="800"  height="3">
-<div>
+</div>
 
 
 个人微信接入ChatGPT，实现和GPT机器人互动聊天，同时支持基于文本生成图像。支持私聊回复和群聊艾特回复。
