@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/oubeichen/wechatbot/config"
 )
@@ -82,13 +83,14 @@ func Completions(msg string) (string, error) {
 	req.Header.Set("Authorization", "Bearer "+apiKey)
 	var client *http.Client
 	if len(proxy) == 0 {
-		client = &http.Client{}
+		client = &http.Client{Timeout: 100 * time.Second}
 	} else {
 		proxyAddr, _ := url.Parse(proxy)
 		client = &http.Client{
 			Transport: &http.Transport{
 				Proxy: http.ProxyURL(proxyAddr),
 			},
+			Timeout: 100 * time.Second,
 		}
 	}
 
