@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/imroc/req/v3"
 	"io"
 	"log"
 	"net/http"
@@ -46,14 +45,42 @@ type FromstonRequestBody struct {
 }
 
 func DownloadImage(url string, fileName string) error {
-	client := req.C()
-
-	_, err := client.R().SetOutputFile(fileName).Get(url)
+	r, err := http.Get(url)
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	return err
+
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(r.Body)
+
+	f, err := os.Create(fileName)
+
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	defer func(f *os.File) {
+		err := f.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(f)
+
+	_, err = f.ReadFrom(r.Body)
+
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	fmt.Println("image downloaded")
+	return nil
 }
 
 func AsyncRequest(apiHost string, taskId string, apiKey string) (string, error) {
