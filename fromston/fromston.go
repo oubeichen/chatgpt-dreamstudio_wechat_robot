@@ -18,9 +18,10 @@ type DataResponse struct {
 	Id       string `json:"id"`
 	Estimate uint   `json:"estimate"`
 
-	GenImg    string `json:"gen_img"`
-	State     string `json:"state"`
-	StateText string `json:"state_text"`
+	GenImg     string `json:"gen_img"`
+	State      string `json:"state"`
+	StateText  string `json:"state_text"`
+	FailReason string `json:"fail_reason"`
 }
 
 type FromstonResponse struct {
@@ -117,7 +118,12 @@ func AsyncRequest(apiHost string, taskId string, apiKey string) (string, error) 
 			return "", errors.New(body1.Info)
 		}
 		if body1.Data.State == "fail" || body1.Data.State == "cancel" || body1.Data.State == "disabled" {
-			return "", errors.New(body1.Data.StateText)
+			failReason := body1.Data.FailReason
+			if failReason == "" {
+				failReason = body1.Data.StateText
+			}
+			failReason = "生成图片失败，失败原因：" + failReason
+			return "", errors.New(failReason)
 		}
 		if body1.Data.State == "success" {
 			return body1.Data.GenImg, nil
