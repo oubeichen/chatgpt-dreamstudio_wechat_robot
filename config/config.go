@@ -34,9 +34,9 @@ type Configuration struct {
 	// 系统角色
 	SystemRole string `json:"system_role"`
 
-	// dreamstdio apikey
-	DreamStdioApiKey string `json:"dreamstdio_api_key"`
-	// dreamstdio模型名称
+	// dreamstudio apikey
+	DreamStudioApiKey string `json:"dreamstudio_api_key"`
+	// dreamstudio模型名称
 	EngineId string `json:"engine_id"`
 	// 图像生成的高度
 	PicWidth uint `json:"picture_width"`
@@ -81,7 +81,12 @@ func LoadConfig() *Configuration {
 				logger.Danger(fmt.Sprintf("open config error: %v", err))
 				return
 			}
-			defer f.Close()
+			defer func(f *os.File) {
+				err := f.Close()
+				if err != nil {
+					logger.Danger(fmt.Sprintf("close config error: %v", err))
+				}
+			}(f)
 			encoder := json.NewDecoder(f)
 			err = encoder.Decode(config)
 			if err != nil {
@@ -101,7 +106,7 @@ func LoadConfig() *Configuration {
 		Proxy := os.Getenv("PROXY")
 		SystemRole := os.Getenv("SYSTEM_ROLE")
 
-		DreamStdioApiKey := os.Getenv("DREAMSTDIO_APIKEY")
+		DreamStudioApiKey := os.Getenv("DREAMSTUDIO_APIKEY")
 		EngineId := os.Getenv("ENGINE_ID")
 		PicWidth := os.Getenv("PICTURE_WIDTH")
 		PicHeight := os.Getenv("PICTURE_HEIGHT")
@@ -153,8 +158,8 @@ func LoadConfig() *Configuration {
 		if SystemRole != "" {
 			config.SystemRole = SystemRole
 		}
-		if DreamStdioApiKey != "" {
-			config.DreamStdioApiKey = DreamStdioApiKey
+		if DreamStudioApiKey != "" {
+			config.DreamStudioApiKey = DreamStudioApiKey
 		}
 		if EngineId != "" {
 			config.EngineId = EngineId
@@ -199,8 +204,8 @@ func LoadConfig() *Configuration {
 	if config.GPTApiKey == "" {
 		logger.Danger("config error: GPTapi key required")
 	}
-	if config.DreamStdioApiKey == "" {
-		logger.Danger("config error: DreamStdioApi key required")
+	if config.DreamStudioApiKey == "" {
+		logger.Danger("config error: DreamStudioApi key required")
 	}
 	return config
 }

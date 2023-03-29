@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -22,8 +23,8 @@ type TextToImageResponse struct {
 	Images []TextToImageImage `json:"artifacts"`
 }
 
-// DreamStdioRequestBody 请求体
-type DreamStdioRequestBody struct {
+// DreamStudioRequestBody 请求体
+type DreamStudioRequestBody struct {
 	TextPrompts        []TextPrompt `json:"text_prompts"`
 	CfgScale           uint         `json:"cfg_scale"`
 	ClipGuidancePreset string       `json:"clip_guidance_preset"`
@@ -54,7 +55,7 @@ func TextToImage(msg string) (string, error) {
 			Weight: 1,
 		},
 	}
-	requestBody := DreamStdioRequestBody{
+	requestBody := DreamStudioRequestBody{
 		TextPrompts:        textPrompts,
 		CfgScale:           cfg.CfgScale,
 		ClipGuidancePreset: "FAST_BLUE",
@@ -69,17 +70,22 @@ func TextToImage(msg string) (string, error) {
 	// 	return nil, fmt.Errorf("json.Marshal requestBody error: %v", err)
 	// }
 
-	//log.Printf("dreamstdio request(%d) json: %s\n", runtimes, string(requestData))
-	log.Printf("dreamstdio request(%d) json: %s\n", 1, string(requestData))
+	//log.Printf("dreamstudio request(%d) json: %s\n", runtimes, string(requestData))
+	log.Printf("dreamstudio request(%d) json: %s\n", 1, string(requestData))
 
 	req, _ := http.NewRequest("POST", reqUrl, bytes.NewBuffer(requestData))
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Authorization", "Bearer "+cfg.DreamStdioApiKey)
+	req.Header.Add("Authorization", "Bearer "+cfg.DreamStudioApiKey)
 
 	// Execute the request & read all the bytes of the body
 	res, _ := http.DefaultClient.Do(req)
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Printf("Non-200 response: %v", err)
+		}
+	}(res.Body)
 
 	if res.StatusCode != 200 {
 		var body map[string]interface{}

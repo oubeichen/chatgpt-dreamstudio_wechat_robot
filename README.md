@@ -1,7 +1,7 @@
 <div align="center">
 <h1>ChatGPT-DreamStudio WeChat Robot</h1>
 <p>  🎨基于GO语言实现的微信聊天和图片生成机器人🎨 </p>
-<img src="https://camo.githubusercontent.com/82291b0fe831bfc6781e07fc5090cbd0a8b912bb8b8d4fec0696c881834f81ac/68747470733a2f2f70726f626f742e6d656469612f394575424971676170492e676966" width="800"  height="3">
+<img alt="" src="https://camo.githubusercontent.com/82291b0fe831bfc6781e07fc5090cbd0a8b912bb8b8d4fec0696c881834f81ac/68747470733a2f2f70726f626f742e6d656469612f394575424971676170492e676966" width="800"  height="3">
 </div>
 
 
@@ -85,7 +85,7 @@ $ docker run -itd --name wechatbot --restart=always \
  -e TEMPREATURE=0.9 \
  -e REPLY_PREFIX=我是来自机器人回复: \
  -e SESSION_CLEAR_TOKEN=下个问题 \
- -e DREAMSTDIO_APIKEY=换成你的dreamstudio key \
+ -e DREAMSTUDIO_APIKEY=换成你的dreamstudio key \
  -e ENGINE_ID=stable-diffusion-v1-5 \
  -e PICTURE_WIDTH=512 \
  -e PICTURE_HEIGHT=512 \
@@ -118,14 +118,13 @@ $ exit
   "temperature": 1,
   "reply_prefix": "来自机器人回复：",
   "session_clear_token": "我要问下一个问题了",
-
-  "dreamstdio_api_key":"你的dreamstdio账号api_key",
-  "engine_id":"stable-diffusion-v1-5",
-  "picture_width":512,
-  "picture_height":512,
-  "steps":30,
-  "cfg_scale":7,
-  "picture_token":"生成图片"
+  "dreamstudio_api_key": "你的dreamstudio账号api_key",
+  "engine_id": "stable-diffusion-v1-5",
+  "picture_width": 512,
+  "picture_height": 512,
+  "steps": 30,
+  "cfg_scale": 7,
+  "picture_token": "生成图片"
 }
 ```
 
@@ -140,8 +139,8 @@ $ exit
   "temperature": 1,                 # GPT热度，0到1，默认0.9，数字越大创造力越强，但更偏离训练事实，越低越接近训练事实
   "reply_prefix": "来自机器人回复：", # 私聊回复前缀
   "session_clear_token": "清空会话"  # 会话清空口令，默认`下个问题`
-  "dreamstdio_api_key":"你的dreamstdio账号api_key",     #dreamstdio账号的api_key
-  "engine_id":"stable-diffusion-v1-5",     			  #dreamstdio模型的名称
+  "dreamstudio_api_key":"你的dreamstudio账号api_key",     #dreamstudio账号的api_key
+  "engine_id":"stable-diffusion-v1-5",     			  #dreamstudio模型的名称
   "picture_width":512,								  #生成图片的宽度，长度，默认512*512
   "picture_height":512,								#要求为64的倍数，且>=128,尺寸越大消耗的credits越多
   "steps":30,										#代表模型的渲染步数，越高图片越精细，所需的渲染时间也越长，默认为30，数值越大消耗的credits越多；

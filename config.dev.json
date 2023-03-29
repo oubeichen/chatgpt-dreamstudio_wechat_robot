@@ -10,7 +10,7 @@
   "proxy": "your proxy",
   "system_role": "",
 
-  "dreamstdio_api_key":"you dreamstdio_api_key",
+  "dreamstudio_api_key":"you dreamstudio_api_key",
   "engine_id":"stable-diffusion-v1-5",
   "picture_width":512,
   "picture_height":512,

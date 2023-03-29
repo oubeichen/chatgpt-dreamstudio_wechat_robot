@@ -64,7 +64,7 @@ func NewGroupMessageHandler(msg *openwechat.Message) (MessageHandlerInterface, e
 
 	userService := service.NewUserService(c, groupSender)
 	handler := &GroupMessageHandler{
-		self:    sender.Self,
+		self:    sender.Self(),
 		msg:     msg,
 		group:   group,
 		sender:  groupSender,
@@ -132,7 +132,12 @@ func (g *GroupMessageHandler) ReplyImage() error {
 	}
 	// 4.回复图片
 	img, _ := os.Open(replyPath)
-	defer img.Close()
+	defer func(img *os.File) {
+		err := img.Close()
+		if err != nil {
+			logger.Danger(fmt.Sprintf("close img error: %v", err))
+		}
+	}(img)
 	_, err = g.msg.ReplyImage(img)
 	if err != nil {
 		return fmt.Errorf("reply user error: %v ", err)

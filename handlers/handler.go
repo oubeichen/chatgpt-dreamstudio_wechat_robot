@@ -67,5 +67,5 @@ func NewHandler() (msgFunc func(msg *openwechat.Message), err error) {
 	dispatcher.RegisterHandler(func(message *openwechat.Message) bool {
 		return !(strings.Contains(message.Content, config.LoadConfig().SessionClearToken) || message.IsSendByGroup() || message.IsFriendAdd())
 	}, UserMessageContextHandler())
-	return openwechat.DispatchMessage(dispatcher), nil
+	return dispatcher.AsMessageHandler(), nil
 }
