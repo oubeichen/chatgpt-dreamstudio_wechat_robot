@@ -99,6 +99,7 @@ func TextToImage(msg string) (string, error) {
 	var body TextToImageResponse
 	if err := json.NewDecoder(res.Body).Decode(&body); err != nil {
 		log.Printf("decode json error: %v", err)
+		return "", err
 	}
 
 	// Write the images to disk
@@ -107,19 +108,23 @@ func TextToImage(msg string) (string, error) {
 		file, err := os.Create(outFile)
 		if err != nil {
 			log.Printf("picture create error: %v", err)
+			return "", err
 		}
 
 		imageBytes, err := base64.StdEncoding.DecodeString(image.Base64)
 		if err != nil {
 			log.Printf("picture decode error: %v", err)
+			return "", err
 		}
 
 		if _, err := file.Write(imageBytes); err != nil {
 			log.Printf("picture write error: %v", err)
+			return "", err
 		}
 
 		if err := file.Close(); err != nil {
 			log.Printf("picture close error: %v", err)
+			return "", err
 		}
 	}
 	return "v1_txt2img_0.png", nil

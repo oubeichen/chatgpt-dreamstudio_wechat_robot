@@ -38,14 +38,28 @@ type Configuration struct {
 	DreamStudioApiKey string `json:"dreamstudio_api_key"`
 	// dreamstudio模型名称
 	EngineId string `json:"engine_id"`
+	// dreamstudio图像生成迭代次数
+	Steps uint `json:"steps"`
+
+	// fromston apikey
+	FromstonApiKey string `json:"fromston_api_key"`
+	// fromston 禅思模式
+	FillPrompt uint `json:"fill_prompt"`
+	// fromston 输出格式
+	ImgFmt string `json:"img_fmt"`
+	// fromston 模型 ID
+	ModelId uint `json:"model_id"`
+	// fromston 禁止关键词
+	NegativePrompt string `json:"negative_prompt"`
+
+	// 使用的图像服务
+	ImageBackend string `json:"image_backend"`
+	// 图像生成系数
+	CfgScale uint `json:"cfg_scale"`
 	// 图像生成的高度
 	PicWidth uint `json:"picture_width"`
 	// 图像生成的高度
 	PicHeight uint `json:"picture_height"`
-	// 图像生成迭代次数
-	Steps uint `json:"steps"`
-	// 图像生成系数
-	CfgScale uint `json:"cfg_scale"`
 	// 图像生成识别指令
 	PictureToken string `json:"picture_token"`
 }
@@ -64,13 +78,21 @@ func LoadConfig() *Configuration {
 			Model:             "gpt-3.5-turbo",
 			Temperature:       0.9,
 			SessionClearToken: "下个问题",
-			SystemRole:        "You are a helpful assistant.",
-			EngineId:          "stable-diffusion-v1-5",
-			PicWidth:          512,
-			PicHeight:         512,
-			Steps:             30,
-			CfgScale:          7,
-			PictureToken:      "生成图片",
+
+			SystemRole: "You are a helpful assistant.",
+			EngineId:   "stable-diffusion-v1-5",
+			Steps:      30,
+
+			FillPrompt:     0,
+			ImgFmt:         "jpg",
+			ModelId:        3,
+			NegativePrompt: "",
+
+			ImageBackend: "dreamstudio",
+			CfgScale:     7,
+			PicWidth:     512,
+			PicHeight:    512,
+			PictureToken: "生成图片",
 		}
 
 		// 判断配置文件是否存在，存在直接JSON读取
@@ -108,9 +130,17 @@ func LoadConfig() *Configuration {
 
 		DreamStudioApiKey := os.Getenv("DREAMSTUDIO_APIKEY")
 		EngineId := os.Getenv("ENGINE_ID")
+		Steps := os.Getenv("STEPS")
+
+		FromstonApiKey := os.Getenv("FROMSTON_API_KEY")
+		FillPrompt := os.Getenv("FILL_PROMPT")
+		ImgFmt := os.Getenv("IMG_FMT")
+		ModelId := os.Getenv("MODEL_ID")
+		NegativePrompt := os.Getenv("NEGATIVE_PROMPT")
+
+		ImageBackend := os.Getenv("IMAGE_BACKEND")
 		PicWidth := os.Getenv("PICTURE_WIDTH")
 		PicHeight := os.Getenv("PICTURE_HEIGHT")
-		Steps := os.Getenv("STEPS")
 		CfgScale := os.Getenv("CFG_SCALE")
 		PictureToken := os.Getenv("PICTURE_TOKEN")
 		if GPTApiKey != "" {
@@ -164,6 +194,52 @@ func LoadConfig() *Configuration {
 		if EngineId != "" {
 			config.EngineId = EngineId
 		}
+		if Steps != "" {
+			steps, err := strconv.Atoi(Steps)
+			if err != nil {
+				logger.Danger(fmt.Sprintf("config steps  error: %v ,get is %v", err, Steps))
+				return
+			}
+			config.Steps = uint(steps)
+		}
+
+		if FromstonApiKey != "" {
+			config.FromstonApiKey = FromstonApiKey
+		}
+		if FillPrompt != "" {
+			fillPrompt, err := strconv.Atoi(FillPrompt)
+			if err != nil {
+				logger.Danger(fmt.Sprintf("config FillPrompt  error: %v ,get is %v", err, FillPrompt))
+				return
+			}
+			config.FillPrompt = uint(fillPrompt)
+		}
+		if ImgFmt != "" {
+			config.ImgFmt = ImgFmt
+		}
+		if ModelId != "" {
+			modelId, err := strconv.Atoi(ModelId)
+			if err != nil {
+				logger.Danger(fmt.Sprintf("config ModelId  error: %v ,get is %v", err, ModelId))
+				return
+			}
+			config.ModelId = uint(modelId)
+		}
+		if NegativePrompt != "" {
+			config.NegativePrompt = NegativePrompt
+		}
+
+		if ImageBackend != "" {
+			config.ImageBackend = ImageBackend
+		}
+		if CfgScale != "" {
+			cfg_scale, err := strconv.Atoi(CfgScale)
+			if err != nil {
+				logger.Danger(fmt.Sprintf("config cfg_scale  error: %v ,get is %v", err, CfgScale))
+				return
+			}
+			config.CfgScale = uint(cfg_scale)
+		}
 		if PicWidth != "" {
 			width, err := strconv.Atoi(PicWidth)
 			if err != nil {
@@ -180,22 +256,6 @@ func LoadConfig() *Configuration {
 			}
 			config.PicHeight = uint(height)
 		}
-		if Steps != "" {
-			steps, err := strconv.Atoi(Steps)
-			if err != nil {
-				logger.Danger(fmt.Sprintf("config steps  error: %v ,get is %v", err, Steps))
-				return
-			}
-			config.Steps = uint(steps)
-		}
-		if CfgScale != "" {
-			cfg_scale, err := strconv.Atoi(CfgScale)
-			if err != nil {
-				logger.Danger(fmt.Sprintf("config cfg_scale  error: %v ,get is %v", err, CfgScale))
-				return
-			}
-			config.CfgScale = uint(cfg_scale)
-		}
 		if PictureToken != "" {
 			config.PictureToken = PictureToken
 		}
@@ -204,8 +264,8 @@ func LoadConfig() *Configuration {
 	if config.GPTApiKey == "" {
 		logger.Danger("config error: GPTapi key required")
 	}
-	if config.DreamStudioApiKey == "" {
-		logger.Danger("config error: DreamStudioApi key required")
+	if config.DreamStudioApiKey == "" && config.FromstonApiKey == "" {
+		logger.Danger("config error: image backend key required")
 	}
 	return config
 }

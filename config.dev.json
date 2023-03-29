@@ -6,15 +6,23 @@
   "model": "gpt-3.5-turbo",
   "temperature": 1,
   "reply_prefix": "来自机器人回复：",
-  "session_clear_token": "我要问下一个问题了",
+  "session_clear_token": "下个问题",
   "proxy": "your proxy",
   "system_role": "",
 
-  "dreamstudio_api_key":"you dreamstudio_api_key",
-  "engine_id":"stable-diffusion-v1-5",
-  "picture_width":512,
-  "picture_height":512,
-  "steps":30,
-  "cfg_scale":7,
-  "picture_token":"生成图片"
+  "dreamstudio_api_key": "you dreamstudio_api_key",
+  "engine_id": "stable-diffusion-v1-5",
+  "steps": 30,
+
+  "fromston_api_key": "your fromston api key",
+  "fill_prompt": 0,
+  "img_fmt": "jpg",
+  "model_id": 1,
+  "negative_prompt": "",
+
+  "image_backend": "dreamstudio or fromston",
+  "cfg_scale": 7,
+  "picture_width": 512,
+  "picture_height": 512,
+  "picture_token": "生成图片"
 }

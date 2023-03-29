@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/oubeichen/wechatbot/fromston"
 	"log"
 	"math/rand"
 	"os"
@@ -117,7 +118,11 @@ func (g *GroupMessageHandler) ReplyImage() error {
 		return nil
 	}
 	// 3.请求图片
-	replyPath, err = dreamstudio.TextToImage(text)
+	if cfg.ImageBackend == "fromston" {
+		replyPath, err = fromston.TextToImage(text)
+	} else {
+		replyPath, err = dreamstudio.TextToImage(text)
+	}
 
 	if err != nil {
 		text := err.Error()
