@@ -62,6 +62,7 @@ func NewGroupMessageHandler(msg *openwechat.Message) (MessageHandlerInterface, e
 	if err != nil {
 		return nil, err
 	}
+	logger.Info(fmt.Sprintf("Sender is %v (%v) (%v)", groupSender.NickName, groupSender.UserName, groupSender.ID()))
 
 	userService := service.NewUserService(c, groupSender)
 	handler := &GroupMessageHandler{
