@@ -65,7 +65,7 @@ func NewUserMessageHandler(message *openwechat.Message) (MessageHandlerInterface
 func (h *UserMessageHandler) handle() error {
 	cfg := config.LoadConfig()
 	//判断文本前缀是PictureToken，例如："生成图片"
-	if strings.HasPrefix(h.msg.Content, cfg.PictureToken) {
+	if strings.Contains(h.msg.Content, cfg.PictureToken) {
 		return h.ReplyImage()
 	}
 	//如果是纯文本，使用ChatGPT进行回复
