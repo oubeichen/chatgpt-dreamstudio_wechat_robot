@@ -32,15 +32,23 @@ func NewUserService(cache *cache.Cache, user *openwechat.User) UserServiceInterf
 	}
 }
 
+func (s *UserService) GetCacheKey() string {
+	userID := s.user.ID()
+	if userID == "" {
+		userID = s.user.UserName
+	}
+	return userID
+}
+
 // ClearUserSessionContext 清空GTP上下文，接收文本中包含`我要问下一个问题`，并且Unicode 字符数量不超过20就清空
 func (s *UserService) ClearUserSessionContext() {
-	s.cache.Delete(s.user.ID())
+	s.cache.Delete(s.GetCacheKey())
 }
 
 // GetUserSessionContext 获取用户会话上下文文本
 func (s *UserService) GetUserSessionContext() string {
 	// 1.获取上次会话信息，如果没有直接返回空字符串
-	sessionContext, ok := s.cache.Get(s.user.ID())
+	sessionContext, ok := s.cache.Get(s.GetCacheKey())
 	if !ok {
 		return ""
 	}
@@ -48,7 +56,7 @@ func (s *UserService) GetUserSessionContext() string {
 	// 2.如果字符长度超过等于4000，强制清空会话（超过GPT会报错）。
 	contextText := sessionContext.(string)
 	if len(contextText) >= 4000 {
-		s.cache.Delete(s.user.ID())
+		s.cache.Delete(s.GetCacheKey())
 	}
 
 	// 3.返回上文
@@ -58,5 +66,5 @@ func (s *UserService) GetUserSessionContext() string {
 // SetUserSessionContext 设置用户会话上下文文本，question用户提问内容，GTP回复内容
 func (s *UserService) SetUserSessionContext(question, reply string) {
 	value := question + "\n" + reply
-	s.cache.Set(s.user.ID(), value, time.Second*config.LoadConfig().SessionTimeout)
+	s.cache.Set(s.GetCacheKey(), value, time.Second*config.LoadConfig().SessionTimeout)
 }
