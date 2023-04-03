@@ -41,7 +41,7 @@ type FromstonRequestBody struct {
 	Height     uint     `json:"height"`
 	Width      uint     `json:"width"`
 	FillPrompt uint     `json:"fill_prompt"`
-	Addition   Addition `json:"steps"`
+	Addition   Addition `json:"addition"`
 	ModelId    uint     `json:"model_id"`
 }
 
